@@ -16,6 +16,10 @@ const {createUser, readUsers} = require('./src/controllers/userController')
 
 const {login, auth, logout, logoutAll} = require('./src/controllers/authController')
 
+const {verifyBook} = require('./src/middlewares/verifyBook')
+
+const {createReview, readReviews} = require('./src/controllers/reviewController')
+
 require('dotenv').config()
 
 app.use(bodyParser.urlencoded({extended: false}));
@@ -45,6 +49,10 @@ router.route("/genres")
 router.route("/genres/:id")
 .patch(auth, updateGenre)
 .delete(auth, deleteGenre)
+
+router.route("/books/:bookID/reviews")
+.post(auth, verifyBook, createReview)
+.get(auth, verifyBook, readReviews)
 
 router.route("/books")
 .post(auth, createBook)

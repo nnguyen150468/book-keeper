@@ -14,6 +14,10 @@ const bookSchema = new mongoose.Schema({
         type: Object,
         required: [true, "Book must have an owner"]
     }
+}, {
+    timestamps: true,
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
 })
 
 bookSchema.pre("save", async function(){
@@ -21,6 +25,12 @@ bookSchema.pre("save", async function(){
     this.genres = await Promise.all(genreArray)
     this.author = await Author.findById(this.author)
     return this
+})
+
+bookSchema.virtual('reviews',{
+    ref: 'Review',
+    localField: '_id',
+    foreignField: 'book'
 })
 
 const Book = mongoose.model("Book", bookSchema);
